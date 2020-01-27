@@ -1,6 +1,6 @@
 require "auditapi/version"
 
-module Auditapi
+module AuditAPI
   class Error < StandardError; end
   # Your code goes here...
 end

@@ -1,3 +1,3 @@
-module Auditapi
+module AuditAPI
   VERSION = "0.1.0"
 end

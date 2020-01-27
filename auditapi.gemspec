@@ -2,7 +2,7 @@ require_relative 'lib/auditapi/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "auditapi"
-  spec.version       = Auditapi::VERSION
+  spec.version       = AuditAPI::VERSION
   spec.authors       = ["AuditAPI"]
   spec.email         = ["support@auditapi.com"]
 

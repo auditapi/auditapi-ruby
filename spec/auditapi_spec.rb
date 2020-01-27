@@ -1,6 +1,6 @@
-RSpec.describe Auditapi do
+RSpec.describe AuditAPI do
   it "has a version number" do
-    expect(Auditapi::VERSION).not_to be nil
+    expect(AuditAPI::VERSION).not_to be nil
   end
 
   it "does something useful" do

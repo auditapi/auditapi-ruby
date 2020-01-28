@@ -1,3 +1,6 @@
+require "addressable/uri"
+require "httparty"
+
 require "auditapi/version"
 
 module AuditAPI

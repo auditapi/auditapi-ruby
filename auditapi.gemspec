@@ -23,4 +23,8 @@ Gem::Specification.new do |spec|
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
+
+  spec.add_dependency "addressable", "2.7.0"
+  spec.add_dependency "httparty", "0.17.3"
+  spec.add_development_dependency "pry", "0.12.2"
 end

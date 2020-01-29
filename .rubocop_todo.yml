@@ -74,23 +74,6 @@ Style/ExpandPathArguments:
   Exclude:
     - 'auditapi.gemspec'
 
-# Offense count: 10
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, never
-Style/FrozenStringLiteralComment:
-  Exclude:
-    - 'Gemfile'
-    - 'Rakefile'
-    - 'auditapi.gemspec'
-    - 'bin/console'
-    - 'lib/auditapi.rb'
-    - 'lib/auditapi/errors.rb'
-    - 'lib/auditapi/resources/event.rb'
-    - 'lib/auditapi/version.rb'
-    - 'spec/auditapi_spec.rb'
-    - 'spec/spec_helper.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, UseHashRocketsWithSymbolValues, PreferHashRocketsForNonAlnumEndingSymbols.

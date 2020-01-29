@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'auditapi'
 require 'bundler/setup'
 require 'pry'

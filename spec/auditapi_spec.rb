@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'AuditAPI::Event' do
   before do
     AuditAPI.api_key = '1234'

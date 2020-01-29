@@ -16,4 +16,8 @@ RSpec.configure do |config|
     c.max_formatted_output_length = nil
     c.syntax = :expect
   end
+
+  config.before(:each) do
+    WebMock.reset!
+  end
 end

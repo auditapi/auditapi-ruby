@@ -3,3 +3,12 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   Exclude:
     - 'notes/**/*'
+
+Layout/LineLength:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false

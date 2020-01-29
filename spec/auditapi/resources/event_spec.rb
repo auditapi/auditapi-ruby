@@ -6,11 +6,6 @@ RSpec.describe 'AuditAPI::Event' do
   end
 
   describe '.create' do
-    it 'requires an api key' do
-      AuditAPI.api_key = nil
-      expect{AuditAPI::Event.create({foo: 'bar'})}.to raise_error(AuditAPI::AuthenticationError)
-    end
-
     it 'requires a valid argument' do
       stub_request(:post, 'https://notify.auditapi.com').to_return(status: 200, body: {}.to_json)
 
@@ -26,11 +21,6 @@ RSpec.describe 'AuditAPI::Event' do
   end
 
   describe '.list' do
-    it 'requires an api key' do
-      AuditAPI.api_key = nil
-      expect{AuditAPI::Event.list({limit: 1})}.to raise_error(AuditAPI::AuthenticationError)
-    end
-
     it 'requires a valid argument' do
       stub_request(:get, /https:\/\/api.auditapi.com\/v1\/events.*/).to_return(status: 200, body: {}.to_json)
 
@@ -44,16 +34,24 @@ RSpec.describe 'AuditAPI::Event' do
     end
 
     it 'constructs the correct URL' do
-      # TODO
+      stub_request(:get, /https:\/\/api.auditapi.com\/v1\/events.*/).to_return(status: 200, body: {}.to_json)
+
+      AuditAPI::Event.list(
+        start_date: 1, end_date: 1,
+        starting_after: 2, ending_before: 2,
+        limit: 3,
+        filters: 4,
+        this_should_be_ignored: 5,
+        and_this: '',
+        this_too: nil
+      )
+
+      url = 'https://api.auditapi.com/v1/events?start_date=1&end_date=1&starting_after=2&ending_before=2&limit=3&filters=4'
+      expect(WebMock).to have_requested(:get, url).once
     end
   end
 
   describe '.retrieve' do
-    it 'requires an api key' do
-      AuditAPI.api_key = nil
-      expect{AuditAPI::Event.retrieve('uuid')}.to raise_error(AuditAPI::AuthenticationError)
-    end
-
     it 'requires a valid argument' do
       stub_request(:get, /https:\/\/api.auditapi.com\/v1\/events.*/).to_return(status: 200, body: {}.to_json)
 
@@ -66,11 +64,6 @@ RSpec.describe 'AuditAPI::Event' do
   end
 
   describe '.search' do
-    it 'requires an api key' do
-      AuditAPI.api_key = nil
-      expect{AuditAPI::Event.search({query: 'foo'})}.to raise_error(AuditAPI::AuthenticationError)
-    end
-
     it 'requires a valid argument' do
       stub_request(:get, /https:\/\/api.auditapi.com\/v1\/events.*/).to_return(status: 200, body: {}.to_json)
 
@@ -85,11 +78,32 @@ RSpec.describe 'AuditAPI::Event' do
     end
 
     it 'constructs the correct URL' do
-      # TODO
+      stub_request(:get, /https:\/\/api.auditapi.com\/v1\/events.*/).to_return(status: 200, body: {}.to_json)
+
+      AuditAPI::Event.search(
+        start_date: 1, end_date: 1,
+        starting_after: 2, ending_before: 2,
+        limit: 3,
+        filters: 4,
+        this_should_be_ignored: 5,
+        and_this: '',
+        this_too: nil,
+        query: 'foo'
+      )
+
+      url = 'https://api.auditapi.com/v1/events/search?start_date=1&end_date=1&starting_after=2&ending_before=2&limit=3&filters=4&query=foo'
+      expect(WebMock).to have_requested(:get, url).once
     end
   end
 
   describe '.process_request' do
+    it 'requires an api key' do
+      AuditAPI.api_key = nil
+      url = 'https://api.auditapi.com/v1/events'
+
+      expect{AuditAPI::Event.send(:process_request, url)}.to raise_error(AuditAPI::AuthenticationError)
+    end
+
     it 'returns a hash on success' do
       url = 'https://api.auditapi.com/v1/events'
 
@@ -108,6 +122,3 @@ RSpec.describe 'AuditAPI::Event' do
     end
   end
 end
-
-# TODO: stub api responses
-# TODO: returns proper error codes

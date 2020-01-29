@@ -2,9 +2,10 @@
 
 module AuditAPI
   class Event
+    VALID_PARAMS = [:start_date, :end_date, :starting_after, :ending_before, :limit, :filters, :query].freeze
+
     class << self
       def create(body)
-        validate_api_key!
         raise ArgumentError unless body.is_a?(Hash) && !body.empty?
 
         url = 'https://notify.auditapi.com'
@@ -13,18 +14,16 @@ module AuditAPI
       end
 
       def list(params = {})
-        validate_api_key!
         raise ArgumentError unless params.is_a?(Hash)
 
         uri = Addressable::URI.new
-        uri.query_values = params
+        uri.query_values = params.delete_if { |k, v| !VALID_PARAMS.include?(k) || v.nil? }
         url = 'https://api.auditapi.com/v1/events?' + uri.query
 
         process_request(url)
       end
 
       def retrieve(uuid)
-        validate_api_key!
         raise ArgumentError unless uuid.is_a?(String) && !uuid.strip.empty?
 
         url = "https://api.auditapi.com/v1/events/#{uuid}"
@@ -33,11 +32,10 @@ module AuditAPI
       end
 
       def search(params)
-        validate_api_key!
         raise ArgumentError unless params.is_a?(Hash) && !params[:query].nil? && !params[:query].strip.empty?
 
         uri = Addressable::URI.new
-        uri.query_values = params
+        uri.query_values = params.delete_if { |k, v| !VALID_PARAMS.include?(k) || v.nil? }
         url = 'https://api.auditapi.com/v1/events/search?' + uri.query
 
         process_request(url)
@@ -46,6 +44,8 @@ module AuditAPI
       private
 
       def process_request(url, body = nil)
+        validate_api_key!
+
         options = {}
         options[:headers] = {
           'Authorization' => "Bearer #{AuditAPI.api_key}",

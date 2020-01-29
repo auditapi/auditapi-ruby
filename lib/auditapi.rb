@@ -1,10 +1,10 @@
-require "addressable/uri"
-require "httparty"
+require 'addressable/uri'
+require 'httparty'
 
-require "auditapi/errors"
-require "auditapi/version"
+require 'auditapi/errors'
+require 'auditapi/version'
 
-require "auditapi/resources/event"
+require 'auditapi/resources/event'
 
 module AuditAPI
   class << self

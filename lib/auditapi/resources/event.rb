@@ -1,22 +1,13 @@
 module AuditAPI
   class Event
     class << self
-      def create(payload)
+      def create(body)
         validate_api_key!
-        raise ArgumentError unless payload.is_a?(Hash) && !payload.empty?
+        raise ArgumentError unless body.is_a?(Hash) && !body.empty?
 
         url = 'https://notify.auditapi.com'
-        options = {
-          body: payload.to_json,
-          headers: { 'Authorization' => "Bearer #{AuditAPI.api_key}" }
-        }
-        response = HTTParty.post(url, options)
-        case response.code
-        when 200..299
-          JSON.parse(response.body)
-        else
-          raise APIError, "API response code was #{response.code}"
-        end
+
+        process_request(url, body)
       end
 
       def list(params = {})
@@ -26,16 +17,8 @@ module AuditAPI
         uri = Addressable::URI.new
         uri.query_values = params
         url = 'https://api.auditapi.com/v1/events?' + uri.query
-        options = {
-          headers: { 'Authorization' => "Bearer #{AuditAPI.api_key}" }
-        }
-        response = HTTParty.get(url, options)
-        case response.code
-        when 200..299
-          JSON.parse(response.body)
-        else
-          raise APIError, "API response code was #{response.code}"
-        end
+
+        process_request(url)
       end
 
       def retrieve(uuid)
@@ -43,16 +26,8 @@ module AuditAPI
         raise ArgumentError unless uuid.is_a?(String) && !uuid.strip.empty?
 
         url = "https://api.auditapi.com/v1/events/#{uuid}"
-        options = {
-          headers: { 'Authorization' => "Bearer #{AuditAPI.api_key}" }
-        }
-        response = HTTParty.get(url, options)
-        case response.code
-        when 200..299
-          JSON.parse(response.body)
-        else
-          raise APIError, "API response code was #{response.code}"
-        end
+
+        process_request(url)
       end
 
       def search(params)
@@ -62,10 +37,23 @@ module AuditAPI
         uri = Addressable::URI.new
         uri.query_values = params
         url = 'https://api.auditapi.com/v1/events/search?' + uri.query
-        options = {
-          headers: { 'Authorization' => "Bearer #{AuditAPI.api_key}" }
-        }
-        response = HTTParty.get(url, options)
+
+        process_request(url)
+      end
+
+      private
+
+      def process_request(url, body = nil)
+        options = {}
+        options[:headers] = { 'Authorization' => "Bearer #{AuditAPI.api_key}" }
+        options[:body] = body.to_json unless body.nil?
+
+        response = if body.nil?
+                     HTTParty.get(url, options)
+                   else
+                     HTTParty.post(url, options)
+                   end
+
         case response.code
         when 200..299
           JSON.parse(response.body)
@@ -74,12 +62,8 @@ module AuditAPI
         end
       end
 
-      private
-
       def validate_api_key!
-        unless AuditAPI.api_key
-          raise AuthenticationError, 'No API key provided.'
-        end
+        raise AuthenticationError, 'No API key provided.' unless AuditAPI.api_key
       end
     end
   end

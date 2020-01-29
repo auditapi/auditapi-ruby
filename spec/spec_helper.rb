@@ -1,4 +1,5 @@
 require "bundler/setup"
+require "webmock/rspec"
 require "auditapi"
 
 RSpec.configure do |config|
@@ -9,6 +10,7 @@ RSpec.configure do |config|
   config.disable_monkey_patching!
 
   config.expect_with :rspec do |c|
+    c.max_formatted_output_length = nil
     c.syntax = :expect
   end
 end

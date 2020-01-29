@@ -10,6 +10,8 @@ RSpec.describe 'AuditAPI::Event' do
     end
 
     it 'requires a valid argument' do
+      stub_request(:post, 'https://notify.auditapi.com').to_return(status: 200, body: {}.to_json)
+
       expect{AuditAPI::Event.create({foo: 'bar'})}.not_to raise_error
       expect{AuditAPI::Event.create}.to raise_error(ArgumentError)
       expect{AuditAPI::Event.create({})}.to raise_error(ArgumentError)
@@ -24,10 +26,12 @@ RSpec.describe 'AuditAPI::Event' do
   describe '.list' do
     it 'requires an api key' do
       AuditAPI.api_key = nil
-      expect{AuditAPI::Event.list({foo: 'bar'})}.to raise_error(AuditAPI::AuthenticationError)
+      expect{AuditAPI::Event.list({limit: 1})}.to raise_error(AuditAPI::AuthenticationError)
     end
 
     it 'requires a valid argument' do
+      stub_request(:get, /https:\/\/api.auditapi.com\/v1\/events.*/).to_return(status: 200, body: {}.to_json)
+
       expect{AuditAPI::Event.list}.not_to raise_error
       expect{AuditAPI::Event.list({limit: 1})}.not_to raise_error
       expect{AuditAPI::Event.list("")}.to raise_error(ArgumentError)
@@ -45,10 +49,12 @@ RSpec.describe 'AuditAPI::Event' do
   describe '.retrieve' do
     it 'requires an api key' do
       AuditAPI.api_key = nil
-      expect{AuditAPI::Event.retrieve({foo: 'bar'})}.to raise_error(AuditAPI::AuthenticationError)
+      expect{AuditAPI::Event.retrieve("uuid")}.to raise_error(AuditAPI::AuthenticationError)
     end
 
     it 'requires a valid argument' do
+      stub_request(:get, /https:\/\/api.auditapi.com\/v1\/events.*/).to_return(status: 200, body: {}.to_json)
+
       expect{AuditAPI::Event.retrieve("uuid")}.not_to raise_error
       expect{AuditAPI::Event.retrieve}.to raise_exception(ArgumentError)
       expect{AuditAPI::Event.retrieve("")}.to raise_exception(ArgumentError)
@@ -60,10 +66,12 @@ RSpec.describe 'AuditAPI::Event' do
   describe '.search' do
     it 'requires an api key' do
       AuditAPI.api_key = nil
-      expect{AuditAPI::Event.search({foo: 'bar'})}.to raise_error(AuditAPI::AuthenticationError)
+      expect{AuditAPI::Event.search({query: 'foo'})}.to raise_error(AuditAPI::AuthenticationError)
     end
 
     it 'requires a valid argument' do
+      stub_request(:get, /https:\/\/api.auditapi.com\/v1\/events.*/).to_return(status: 200, body: {}.to_json)
+
       expect{AuditAPI::Event.search({query: 'foo'})}.not_to raise_error
       expect{AuditAPI::Event.search}.to raise_error(ArgumentError)
       expect{AuditAPI::Event.search({})}.to raise_error(ArgumentError)

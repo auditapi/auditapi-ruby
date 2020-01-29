@@ -11,7 +11,12 @@ module AuditAPI
           headers: { 'Authorization' => "Bearer #{AuditAPI.api_key}" }
         }
         response = HTTParty.post(url, options)
-        JSON.parse(response.body)
+        case response.code
+        when 200..299
+          JSON.parse(response.body)
+        else
+          raise APIError, "API response code was #{response.code}"
+        end
       end
 
       def list(params = {})
@@ -25,7 +30,12 @@ module AuditAPI
           headers: { 'Authorization' => "Bearer #{AuditAPI.api_key}" }
         }
         response = HTTParty.get(url, options)
-        JSON.parse(response.body)
+        case response.code
+        when 200..299
+          JSON.parse(response.body)
+        else
+          raise APIError, "API response code was #{response.code}"
+        end
       end
 
       def retrieve(uuid)
@@ -37,7 +47,12 @@ module AuditAPI
           headers: { 'Authorization' => "Bearer #{AuditAPI.api_key}" }
         }
         response = HTTParty.get(url, options)
-        JSON.parse(response.body)
+        case response.code
+        when 200..299
+          JSON.parse(response.body)
+        else
+          raise APIError, "API response code was #{response.code}"
+        end
       end
 
       def search(params)
@@ -51,7 +66,12 @@ module AuditAPI
           headers: { 'Authorization' => "Bearer #{AuditAPI.api_key}" }
         }
         response = HTTParty.get(url, options)
-        JSON.parse(response.body)
+        case response.code
+        when 200..299
+          JSON.parse(response.body)
+        else
+          raise APIError, "API response code was #{response.code}"
+        end
       end
 
       private

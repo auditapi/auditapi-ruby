@@ -21,6 +21,17 @@ RSpec.describe 'AuditAPI::Event' do
       expect{AuditAPI::Event.create(123)}.to raise_error(ArgumentError)
       expect{AuditAPI::Event.create(true)}.to raise_error(ArgumentError)
     end
+
+    it 'returns a hash on success' do
+      returned_body = {"id"=>"28d90ccf-3a6b-492e-b7e9-0aecae96311d", "type"=>"event"}
+      stub_request(:post, 'https://notify.auditapi.com').to_return(status: 200, body: returned_body.to_json)
+      expect(AuditAPI::Event.create({foo: 'bar'})).to eq(returned_body)
+    end
+
+    it 'raises an exception on error' do
+      stub_request(:post, 'https://notify.auditapi.com').to_return(status: 500, body: '')
+      expect{AuditAPI::Event.create({foo: 'bar'})}.to raise_error(AuditAPI::APIError)
+    end
   end
 
   describe '.list' do

@@ -47,7 +47,10 @@ module AuditAPI
 
       def process_request(url, body = nil)
         options = {}
-        options[:headers] = { 'Authorization' => "Bearer #{AuditAPI.api_key}" }
+        options[:headers] = {
+          'Authorization' => "Bearer #{AuditAPI.api_key}",
+          "User-Agent" => "AuditAPI/v1 RubyBindings/#{AuditAPI::VERSION}"
+        }
         options[:body] = body.to_json unless body.nil?
 
         response = if body.nil?

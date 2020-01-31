@@ -5,4 +5,5 @@ module AuditAPI
 
   class APIError < AuditAPIError; end
   class AuthenticationError < AuditAPIError; end
+  class InvalidRequestError < AuditAPIError; end
 end

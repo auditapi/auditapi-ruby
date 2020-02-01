@@ -20,7 +20,13 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+# configure gem
+AuditAPI.api_key = "abc123..."
+
+# list events
+AuditAPI::Event.list
+```
 
 ## Development
 

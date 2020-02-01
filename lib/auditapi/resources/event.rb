@@ -69,7 +69,7 @@ module AuditAPI
 
         case response.code
         when 200..299
-          BaseObject.parse(response)
+          BaseObject.parse(response, params)
         else
           raise APIError, "API response code was #{response.code}"
         end

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'addressable/uri'
 require 'httparty'
 
 require 'auditapi/errors'

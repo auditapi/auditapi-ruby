@@ -19,17 +19,16 @@ module AuditAPI
 
         url = 'https://notify.auditapi.com'
 
-        process_request(url, body)
+        process_request(url, nil, body)
       end
 
       def list(params = {})
         raise ArgumentError unless params.is_a?(Hash)
 
-        uri = Addressable::URI.new
-        uri.query_values = params.delete_if { |k, v| !VALID_PARAMS.include?(k) || v.nil? }
-        url = 'https://api.auditapi.com/v1/events?' + uri.query
+        url = 'https://api.auditapi.com/v1/events'
+        params = params.delete_if { |k, v| !VALID_PARAMS.include?(k) || v.nil? }
 
-        process_request(url)
+        process_request(url, params)
       end
 
       def retrieve(uuid)
@@ -43,24 +42,24 @@ module AuditAPI
       def search(params)
         raise ArgumentError unless params.is_a?(Hash) && !params[:query].nil? && !params[:query].strip.empty?
 
-        uri = Addressable::URI.new
-        uri.query_values = params.delete_if { |k, v| !VALID_PARAMS.include?(k) || v.nil? }
-        url = 'https://api.auditapi.com/v1/events/search?' + uri.query
+        url = 'https://api.auditapi.com/v1/events/search'
+        params = params.delete_if { |k, v| !VALID_PARAMS.include?(k) || v.nil? }
 
-        process_request(url)
+        process_request(url, params)
       end
 
       private
 
-      def process_request(url, body = nil)
+      def process_request(url, params = {}, body = nil)
         raise AuthenticationError, 'No API key provided.' unless AuditAPI.api_key
 
         options = {}
+        options[:body] = body.to_json unless body.nil?
         options[:headers] = {
           'Authorization' => "Bearer #{AuditAPI.api_key}",
           "User-Agent" => "AuditAPI/v1 RubyBindings/#{AuditAPI::VERSION}"
         }
-        options[:body] = body.to_json unless body.nil?
+        options[:query] = params
 
         response = if body.nil?
                      HTTParty.get(url, options)

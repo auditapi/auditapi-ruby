@@ -1,8 +1,17 @@
 # frozen_string_literal: true
 
 module AuditAPI
-  class Event
+  class Event < BaseObject
     VALID_PARAMS = [:start_date, :end_date, :starting_after, :ending_before, :limit, :filters, :query].freeze
+
+    def initialize(values)
+      @values = values
+    end
+
+    define_method(:id) { @values['id'] }
+    define_method(:object) { @values['object'] }
+    define_method(:timestamp) { @values['timestamp'] }
+    define_method(:payload) { @values['payload'] }
 
     class << self
       def create(body)
@@ -44,7 +53,7 @@ module AuditAPI
       private
 
       def process_request(url, body = nil)
-        validate_api_key!
+        raise AuthenticationError, 'No API key provided.' unless AuditAPI.api_key
 
         options = {}
         options[:headers] = {
@@ -61,14 +70,10 @@ module AuditAPI
 
         case response.code
         when 200..299
-          JSON.parse(response.body)
+          BaseObject.parse(response)
         else
           raise APIError, "API response code was #{response.code}"
         end
-      end
-
-      def validate_api_key!
-        raise AuthenticationError, 'No API key provided.' unless AuditAPI.api_key
       end
     end
   end

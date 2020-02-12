@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    auditapi (0.1.0)
+    auditapi (1.0.0)
       httparty (= 0.17.3)
 
 GEM

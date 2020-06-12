@@ -36,10 +36,7 @@ RSpec.describe 'AuditAPI::Event' do
         start_date: 1, end_date: 1,
         starting_after: 2, ending_before: 2,
         limit: 3,
-        filters: 4,
-        this_should_be_ignored: 5,
-        and_this: '',
-        this_too: nil
+        filters: 4
       )
 
       url = 'https://api.auditapi.com/v1/events?start_date=1&end_date=1&starting_after=2&ending_before=2&limit=3&filters=4'
@@ -51,7 +48,7 @@ RSpec.describe 'AuditAPI::Event' do
     it 'requires a valid argument' do
       stub_request(:get, /https:\/\/api.auditapi.com\/v1\/events.*/).to_return(status: 200, body: {}.to_json)
 
-      expect{AuditAPI::Event.retrieve('uuid')}.not_to raise_error
+      expect{AuditAPI::Event.retrieve('sample-id')}.not_to raise_error
       expect{AuditAPI::Event.retrieve}.to raise_exception(ArgumentError)
       expect{AuditAPI::Event.retrieve('')}.to raise_exception(ArgumentError)
       expect{AuditAPI::Event.retrieve(' ')}.to raise_exception(ArgumentError)
@@ -78,9 +75,6 @@ RSpec.describe 'AuditAPI::Event' do
         starting_after: 2, ending_before: 2,
         limit: 3,
         filters: 4,
-        this_should_be_ignored: 5,
-        and_this: '',
-        this_too: nil,
         query: 'foo'
       )
 
@@ -94,7 +88,7 @@ RSpec.describe 'AuditAPI::Event' do
       AuditAPI.api_key = nil
       url = 'https://api.auditapi.com/v1/events'
 
-      expect{AuditAPI::Event.send(:process_request, url)}.to raise_error(AuditAPI::AuthenticationError)
+      expect{AuditAPI::Event.send(:process_request, url: url)}.to raise_error(AuditAPI::AuthenticationError)
     end
 
     it 'returns a valid object on success' do
@@ -102,11 +96,11 @@ RSpec.describe 'AuditAPI::Event' do
 
       body = { object: 'list', has_more: false, data: [] }
       stub_request(:get, url).to_return(status: 200, body: body.to_json)
-      expect(AuditAPI::Event.send(:process_request, url)).to be_a_kind_of(AuditAPI::ListObject)
+      expect(AuditAPI::Event.send(:process_request, url: url)).to be_a_kind_of(AuditAPI::ListObject)
 
       body = { object: 'event', id: '', timestamp: '', payload: {} }
       stub_request(:get, url).to_return(status: 200, body: body.to_json)
-      expect(AuditAPI::Event.send(:process_request, url)).to be_a_kind_of(AuditAPI::Event)
+      expect(AuditAPI::Event.send(:process_request, url: url)).to be_a_kind_of(AuditAPI::Event)
     end
 
     it 'raises an exception on error' do
@@ -114,7 +108,7 @@ RSpec.describe 'AuditAPI::Event' do
 
       stub_request(:get, url).to_return(status: 500, body: '')
 
-      expect{AuditAPI::Event.send(:process_request, url)}.to raise_error(AuditAPI::APIError)
+      expect{AuditAPI::Event.send(:process_request, url: url)}.to raise_error(AuditAPI::APIError)
     end
   end
 end

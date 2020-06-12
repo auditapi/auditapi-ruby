@@ -2,8 +2,6 @@
 
 module AuditAPI
   class Event < BaseObject
-    VALID_PARAMS = [:start_date, :end_date, :starting_after, :ending_before, :limit, :filters, :query].freeze
-
     def initialize(values)
       @values = values
     end
@@ -14,49 +12,64 @@ module AuditAPI
     define_method(:payload) { @values['payload'] }
 
     class << self
-      def create(body)
+      def create(body, api_key: nil)
         raise ArgumentError unless body.is_a?(Hash) && !body.empty?
 
         url = 'https://notify.auditapi.com'
 
-        process_request(url, nil, body)
+        process_request(url: url, body: body, api_key: api_key)
       end
 
-      def list(params = {})
-        raise ArgumentError unless params.is_a?(Hash)
-
+      def list(start_date: nil, end_date: nil, starting_after: nil, ending_before: nil, limit: nil, filters: nil, api_key: nil)
         url = 'https://api.auditapi.com/v1/events'
-        params = params.delete_if { |k, v| !VALID_PARAMS.include?(k) || v.nil? }
 
-        process_request(url, params)
+        params = {
+          start_date: start_date,
+          end_date: end_date,
+          starting_after: starting_after,
+          ending_before: ending_before,
+          limit: limit,
+          filters: filters
+        }
+
+        process_request(url: url, params: params, api_key: api_key)
       end
 
-      def retrieve(uuid)
-        raise ArgumentError unless uuid.is_a?(String) && !uuid.strip.empty?
+      def retrieve(id, api_key: nil)
+        raise ArgumentError unless id.is_a?(String) && !id.strip.empty?
 
-        url = "https://api.auditapi.com/v1/events/#{uuid}"
+        url = "https://api.auditapi.com/v1/events/#{id}"
 
-        process_request(url)
+        process_request(url: url, api_key: api_key)
       end
 
-      def search(params)
-        raise ArgumentError unless params.is_a?(Hash) && !params[:query].nil? && !params[:query].strip.empty?
+      def search(start_date: nil, end_date: nil, starting_after: nil, ending_before: nil, limit: nil, filters: nil, query:, api_key: nil)
+        raise ArgumentError unless !query.strip.empty?
 
         url = 'https://api.auditapi.com/v1/events/search'
-        params = params.delete_if { |k, v| !VALID_PARAMS.include?(k) || v.nil? }
 
-        process_request(url, params)
+        params = {
+          start_date: start_date,
+          end_date: end_date,
+          starting_after: starting_after,
+          ending_before: ending_before,
+          limit: limit,
+          filters: filters,
+          query: query
+        }
+
+        process_request(url: url, params: params, api_key: api_key)
       end
 
       private
 
-      def process_request(url, params = {}, body = nil)
-        raise AuthenticationError, 'No API key provided.' unless AuditAPI.api_key
+      def process_request(url:, params: {}, body: nil, api_key: nil)
+        raise AuthenticationError, 'No API key provided.' if AuditAPI.api_key.nil? && api_key.nil?
 
         options = {}
         options[:body] = body.to_json unless body.nil?
         options[:headers] = {
-          'Authorization' => "Bearer #{AuditAPI.api_key}",
+          'Authorization' => "Bearer #{api_key || AuditAPI.api_key}",
           "User-Agent" => "AuditAPI/v1 RubyBindings/#{AuditAPI::VERSION}"
         }
         options[:query] = params

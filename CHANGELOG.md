@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0 - 2020-06-11
+* Dependency updates
+* `api_key` can be specified in method calls
+
 ## 1.0.1 - 2020-03-16
 * Dependency updates
 

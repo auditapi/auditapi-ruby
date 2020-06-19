@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0 - 2020-06-19
+* Dependency updates
+* Replaced `filters` param with `filter`
+
 ## 1.1.0 - 2020-06-11
 * Dependency updates
 * `api_key` can be specified in method calls

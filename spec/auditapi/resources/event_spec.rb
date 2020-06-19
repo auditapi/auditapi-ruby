@@ -36,10 +36,10 @@ RSpec.describe 'AuditAPI::Event' do
         start_date: 1, end_date: 1,
         starting_after: 2, ending_before: 2,
         limit: 3,
-        filters: 4
+        filter: 4
       )
 
-      url = 'https://api.auditapi.com/v1/events?start_date=1&end_date=1&starting_after=2&ending_before=2&limit=3&filters=4'
+      url = 'https://api.auditapi.com/v1/events?start_date=1&end_date=1&starting_after=2&ending_before=2&limit=3&filter=4'
       expect(WebMock).to have_requested(:get, url).once
     end
   end
@@ -74,11 +74,11 @@ RSpec.describe 'AuditAPI::Event' do
         start_date: 1, end_date: 1,
         starting_after: 2, ending_before: 2,
         limit: 3,
-        filters: 4,
+        filter: 4,
         query: 'foo'
       )
 
-      url = 'https://api.auditapi.com/v1/events/search?start_date=1&end_date=1&starting_after=2&ending_before=2&limit=3&filters=4&query=foo'
+      url = 'https://api.auditapi.com/v1/events/search?start_date=1&end_date=1&starting_after=2&ending_before=2&limit=3&filter=4&query=foo'
       expect(WebMock).to have_requested(:get, url).once
     end
   end

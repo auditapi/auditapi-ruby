@@ -20,7 +20,7 @@ module AuditAPI
         process_request(url: url, body: body, api_key: api_key)
       end
 
-      def list(start_date: nil, end_date: nil, starting_after: nil, ending_before: nil, limit: nil, filters: nil, api_key: nil)
+      def list(start_date: nil, end_date: nil, starting_after: nil, ending_before: nil, limit: nil, filter: nil, api_key: nil)
         url = 'https://api.auditapi.com/v1/events'
 
         params = {
@@ -29,7 +29,7 @@ module AuditAPI
           starting_after: starting_after,
           ending_before: ending_before,
           limit: limit,
-          filters: filters
+          filter: filter
         }
 
         process_request(url: url, params: params, api_key: api_key)
@@ -43,7 +43,7 @@ module AuditAPI
         process_request(url: url, api_key: api_key)
       end
 
-      def search(start_date: nil, end_date: nil, starting_after: nil, ending_before: nil, limit: nil, filters: nil, query:, api_key: nil)
+      def search(start_date: nil, end_date: nil, starting_after: nil, ending_before: nil, limit: nil, filter: nil, query:, api_key: nil)
         raise ArgumentError unless !query.strip.empty?
 
         url = 'https://api.auditapi.com/v1/events/search'
@@ -54,7 +54,7 @@ module AuditAPI
           starting_after: starting_after,
           ending_before: ending_before,
           limit: limit,
-          filters: filters,
+          filter: filter,
           query: query
         }
 

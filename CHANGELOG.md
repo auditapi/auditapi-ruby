@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.2.0 - 2020-06-19
+## 1.2.1 - 2020-06-19
 * Dependency updates
 * Replaced `filters` param with `filter`
 

@@ -72,7 +72,7 @@ module AuditAPI
           'Authorization' => "Bearer #{api_key || AuditAPI.api_key}",
           "User-Agent" => "AuditAPI/v1 RubyBindings/#{AuditAPI::VERSION}"
         }
-        options[:query] = params
+        options[:query] = params.compact
 
         response = if body.nil?
                      HTTParty.get(url, options)

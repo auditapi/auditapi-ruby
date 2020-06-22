@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.2 - 2020-06-21
+* Fixed `search` param check
+* Remove empty params when sending requests
+
 ## 1.2.1 - 2020-06-19
 * Dependency updates
 * Replaced `filters` param with `filter`

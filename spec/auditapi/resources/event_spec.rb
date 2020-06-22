@@ -60,11 +60,13 @@ RSpec.describe 'AuditAPI::Event' do
     it 'requires a valid argument' do
       stub_request(:get, /https:\/\/api.auditapi.com\/v1\/events.*/).to_return(status: 200, body: {}.to_json)
 
-      expect{AuditAPI::Event.search({query: 'foo'})}.not_to raise_error
-
-      [nil, {}, '', ' ', 'string', 123, true].each do |f|
-        expect{AuditAPI::Event.search(f)}.to raise_error(ArgumentError)
-      end
+      expect{AuditAPI::Event.search(query: '123')}.not_to raise_error
+      expect{AuditAPI::Event.search(query: 123)}.not_to raise_error
+      expect{AuditAPI::Event.search(query: true)}.not_to raise_error
+      expect{AuditAPI::Event.search(query: false)}.not_to raise_error
+      expect{AuditAPI::Event.search(query: nil)}.to raise_exception(ArgumentError)
+      expect{AuditAPI::Event.search(query: '')}.to raise_exception(ArgumentError)
+      expect{AuditAPI::Event.search(query: ' ')}.to raise_exception(ArgumentError)
     end
 
     it 'constructs the correct URL' do

@@ -44,7 +44,7 @@ module AuditAPI
       end
 
       def search(start_date: nil, end_date: nil, starting_after: nil, ending_before: nil, limit: nil, filter: nil, query:, api_key: nil)
-        raise ArgumentError unless !query.strip.empty?
+        raise ArgumentError if query.nil? || query.to_s.strip.empty?
 
         url = 'https://api.auditapi.com/v1/events/search'
 

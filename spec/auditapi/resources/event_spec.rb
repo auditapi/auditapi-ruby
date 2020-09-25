@@ -7,7 +7,7 @@ RSpec.describe 'AuditAPI::Event' do
 
   describe '.create' do
     it 'requires a valid argument' do
-      stub_request(:post, 'https://notify.auditapi.com').to_return(status: 200, body: {}.to_json)
+      stub_request(:post, /https:\/\/api.auditapi.com\/v1\/events.*/).to_return(status: 200, body: {}.to_json)
 
       expect{AuditAPI::Event.create({foo: 'bar'})}.not_to raise_error
 

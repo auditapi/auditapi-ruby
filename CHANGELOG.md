@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.0 - 2020-09-25
+* Updated event creation API endpoint
+
 ## 1.2.2 - 2020-06-21
 * Fixed `search` param check
 * Remove empty params when sending requests

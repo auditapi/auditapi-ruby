@@ -15,7 +15,7 @@ module AuditAPI
       def create(body, api_key: nil)
         raise ArgumentError unless body.is_a?(Hash) && !body.empty?
 
-        url = 'https://notify.auditapi.com'
+        url = 'https://api.auditapi.com/v1/events'
 
         process_request(url: url, body: body, api_key: api_key)
       end
